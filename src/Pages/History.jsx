@@ -83,7 +83,7 @@ const History = () => {
         .then(savedOrder => {
           console.log('Order placed:', savedOrder);
           alert("Order placed successfully");
-          navigate('/mybasket', { order: savedOrder });
+          navigate('/status');
         })
         .catch(error => {
           console.error('Error placing order:', error);

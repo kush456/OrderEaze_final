@@ -103,7 +103,7 @@ const Login = () => {
       // const decodedToken = jwt_decode(token);
       // console.log(decodedToken); 
       // localStorage.setItem('token', token);
-      navigate('/Menu'); // 
+      navigate('/table'); // 
     } catch (error) {
       setError(error.message);
     }

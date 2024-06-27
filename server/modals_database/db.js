@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-const mongooseURL = "mongodb+srv://amany29074:22124006@khanakhojo.xizkwpq.mongodb.net/?retryWrites=true&w=majority&appName=KhanaKhojo/qrMenu";   //qrMenu is the database name 
+const mongooseURL = "mongodb+srv://kaju456:l4EJtrw8yeZXRWMl@cluster0.gtee4rz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";   //qrMenu is the database name 
 
 const mongoDB = async () => {
   try {

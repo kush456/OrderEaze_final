@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const FeedbackPage = () => {
     const [feedbacks, setFeedbacks] = useState([]);
+    const navigate = useNavigate();
 
     const [newFeedback, setNewFeedback] = useState({
         name: '',
@@ -19,12 +21,16 @@ const FeedbackPage = () => {
         setNewFeedback({ name: '', comment: '' });
     };
 
+    const goToMenu = () => {
+        navigate('/menu');
+      };
+
     return (
         <div className="min-h-screen bg-orange-50 flex flex-col items-center p-6">
             <h1 className="text-center text-3xl font-bold mb-6">We Value Your Feedback</h1>
 
-            <button className="bg-red-400 text-white px-6 py-3 rounded-lg font-semibold mb-8">
-                Menu Feedback Form
+            <button className="bg-red-400 text-white px-6 py-3 rounded-lg font-semibold mb-8" onClick={goToMenu}>
+                Go Back
             </button>
 
             {feedbacks.length > 0 ? (

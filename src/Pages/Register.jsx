@@ -2,7 +2,7 @@ import React, { useState ,} from 'react';
 import 'tailwindcss/tailwind.css';
 import { useNavigate } from 'react-router-dom';
 import { FaGoogle, FaApple, FaFacebook } from 'react-icons/fa';
-import { set } from 'mongoose';
+
 
 const Register = () => {
   const navigate = useNavigate();

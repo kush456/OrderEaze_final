@@ -12,6 +12,7 @@ import TableInput from "./Pages/Tableinput.jsx";
 import Menu from "./Pages/Menu.jsx";
 import PaymentsPage from "./Pages/PaymentsPage.jsx";
 import FeedbackPage from "./Pages/FeedbackPage.jsx";
+import OrderTracking from "./Pages/OrderTracking.jsx";
 
 
 export default function App() {
@@ -29,7 +30,7 @@ export default function App() {
           <Route path="/history" element={< History/>}></Route>
           <Route path="/payment" element={< PaymentsPage/>}></Route>
           <Route path="/feedback" element={<FeedbackPage />} />
-
+          <Route path="/status" element={<OrderTracking/>} />
           
         </Routes>
       </Router>
