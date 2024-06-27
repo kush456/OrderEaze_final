@@ -1,25 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+// import { Intro } from "./Pages/Intro";
+import React from "react";
+import { Landing } from "./Pages/Landing.jsx";
+import Register from "./Pages/Register.jsx";
+import Login  from "./Pages/Login.jsx";
+import {MyBasket}  from "./Pages/MyBasket.jsx";
+import MenuPage from "./Pages/Menupage.jsx";
+import History from "./Pages/History.jsx";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import VerificationPage from "./Pages/VerificationPage .jsx";
+import TableInput from "./Pages/Tableinput.jsx";
+import Menu from "./Pages/Menu.jsx";
+import PaymentsPage from "./Pages/PaymentsPage.jsx";
+import FeedbackPage from "./Pages/FeedbackPage.jsx";
 
-function App() {
+
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Landing />}></Route>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/register" element={<Register />}></Route>
+          <Route path="/Menu" element={<MenuPage />}></Route>
+          <Route path="/Table" element={<TableInput />}></Route>
+          <Route path="/menu2" element={<Menu />}></Route>
+          <Route path="/mybasket" element={< MyBasket/>}></Route>
+          <Route path="/history" element={< History/>}></Route>
+          <Route path="/payment" element={< PaymentsPage/>}></Route>
+          <Route path="/feedback" element={<FeedbackPage />} />
+
+          
+        </Routes>
+      </Router>
+      {/* <Intro/> */}
+      {/* <Login/> */}
+      {/* <MyBasket/> */}
+      {/*  */}
+      {/* <Signin /> */}
+    </>
   );
 }
-
-export default App;
