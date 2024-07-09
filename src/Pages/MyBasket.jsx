@@ -36,25 +36,31 @@ export const MyBasket = () => {
       console.error('User is not logged in');
       return;
     }
-
+  
     try {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.userId;
-
+  
+      const items = Object.keys(order).map(category =>
+        order[category].map(item => ({
+          category: category,
+          name: item.name,
+          quantity: item.quantity,
+          price: parseFloat((item.discountedPrice || item.price).slice(1)), // Convert price to number
+          special: item.special
+        }))
+      ).flat();
+      
+      const totalAmount = items.reduce((total, item) => total + item.price * item.quantity, 0);
+  
       const orderData = {
         userId: userId,
-        items: Object.keys(order).map(category =>
-          order[category].map(item => ({
-            category: category,
-            name: item.name,
-            quantity: item.quantity,
-            price: item.discountedPrice || item.price,
-            special: item.special
-          }))
-        ).flat(),
-        orderDate: new Date().toISOString()
+        items: items,
+        orderDate: new Date().toISOString(),
+        totalAmount: totalAmount,
+        status: 'active'
       };
-
+      console.log('Order data being sent:', orderData); //logging to check
       const response = await fetch('http://localhost:4000/api/order', {
         method: 'POST',
         headers: {
@@ -63,15 +69,15 @@ export const MyBasket = () => {
         },
         body: JSON.stringify(orderData),
       });
-
+  
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
+  
       const savedOrder = await response.json();
       alert("Order placed successfully");
       setOrderPlaced(true); // Set order placed flag to true
-
+  
       // Clear the local storage and reset the order state
       localStorage.removeItem('order');
       setOrder({});
@@ -108,6 +114,7 @@ export const MyBasket = () => {
     navigate('/history'); // Navigate to order history page
   };
 
+  //console.log("order in basket ", order);
   return (
     <div className="max-w-lg mx-auto mb-32 p-4 bg-white rounded-lg shadow-lg md:max-w-2xl lg:max-w-4xl xl:max-w-6xl">
       <div className="flex items-center justify-between mb-4">

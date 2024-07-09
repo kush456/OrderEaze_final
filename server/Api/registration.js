@@ -1,5 +1,6 @@
 import express from 'express';
-import User from '../modals_database/modal.js';
+
+import FoodItem from '../modals_database/modal.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -24,6 +25,21 @@ const verifyToken = (req, res, next) => {
   });
 };
 
+console.log(FoodItem.FoodItem)
+console.log(FoodItem.User)
+
+
+router.get('/menu', async (req, res) => {
+  try {
+    const fooditem=FoodItem.FoodItem
+    const menu = await fooditem.find({});
+    res.json(menu);
+  } catch (error) {
+    console.error('Error fetching menu:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
 
 router.post('/register', async (req, res) => {
   console.log("hello from the register");
@@ -33,7 +49,7 @@ console.log(req.body)
     // Hash the password before storing it in the database
     const hashedPassword = await bcrypt.hash(password, 10);
     // Create a new user record in the database
-    const userData = await User.create({ name,phone,password: hashedPassword ,email});
+    const userData = await FoodItem.User.create({ name,phone,password: hashedPassword ,email});
     console.log('User registered successfully');
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
@@ -73,7 +89,7 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await FoodItem.User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -94,17 +110,18 @@ router.post('/login', async (req, res) => {
   }
 });
 
+
 router.post('/order', verifyToken, async (req, res) => {
-  const { items, totalAmount } = req.body;
+  const { items, totalAmount, status } = req.body;
 
   try {
-    const user = await User.findById(req.userId);
+    const user = await FoodItem.User.findById(req.userId);
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    user.orders.push({ items, totalAmount });
+    user.orders.push({ items, totalAmount, status});
 
     await user.save();
     res.status(201).json({ message: 'Order placed successfully' });
@@ -114,9 +131,10 @@ router.post('/order', verifyToken, async (req, res) => {
   }
 });
 
+
 router.get('/orderhist', verifyToken, async (req, res) => {
   try {
-    const user = await User.findById(req.userId).select('orders');
+    const user = await FoodItem.User.findById(req.userId).select('orders');
     console.log(user)
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -129,7 +147,76 @@ router.get('/orderhist', verifyToken, async (req, res) => {
   }
 });
 
+router.get('/placedorders', async (req, res) => {
+  try {
+    const users = await FoodItem.User.find().select('email orders');
 
-//next route for payment
+    const response = users.map(user => ({
+      email: user.email,
+      orders: user.orders
+    }));
+
+    res.json(response);
+    console.log(response);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching orders', error });
+  }
+});
+
+router.get('/placedorders/:orderId', async (req, res) => {
+  const { orderId } = req.params;
+
+  try {
+    const user = await FoodItem.User.findOne({ 'orders._id': orderId }).select('email orders');
+    console.log("server useer side" , user);
+    if (!user) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    
+    const order = user.orders.find(order => order._id.toString() === orderId);
+
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    res.json({
+      email: user.email,
+      order: order
+    });
+    console.log("server side" , order);
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Route to update the status of an order
+router.patch('/placedorders/:orderId/status', verifyToken, async (req, res) => {
+  const { orderId } = req.params;
+  const { status } = req.body;
+  console.log(req.body);
+  try {
+    const user = await FoodItem.User.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const order = user.orders.id(orderId);
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    order.status = status;
+    await user.save();
+
+    res.status(200).json({ message: 'Order status updated successfully', order });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 export default router;

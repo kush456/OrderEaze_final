@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom';
 const History = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [selectedOrderStatus, setSelectedOrderStatus] = useState('');
+  const [selectedOrderId, setSelectedOrderId] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,7 +46,7 @@ const History = () => {
     fetchOrders();
   }, []);
 
-  const handleReorder = (order) => {
+  const handleReorder = (items) => {
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('User is not logged in');
@@ -54,16 +57,13 @@ const History = () => {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.userId;
 
+      const totalAmount = items.reduce((total, item) => total + item.price * item.quantity, 0);
+  
       const orderData = {
         userId: userId,
-        items: order.items.map(item => ({
-          category: item.category,
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price,
-          special: item.special
-        })),
-        orderDate: new Date().toISOString(),
+        items: items,
+        orderDate: new Date().toLocaleDateString(),
+        totalAmount: totalAmount,
       };
 
       fetch('http://localhost:4000/api/order', {
@@ -94,6 +94,46 @@ const History = () => {
     }
   };
 
+  const handleStatus = async (orderId) => {
+    //console.log(orderId);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('User is not logged in');
+      return;
+    }
+
+    try {
+      const decodedToken = jwtDecode(token);
+      
+
+      const response = await fetch(`http://localhost:4000/api/placedorders/${orderId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const order = await response.json();
+      console.log("to check status ", order);
+      setSelectedOrderStatus(order.order.status);
+      setSelectedOrderId(orderId);
+      setPopupVisible(true);
+    } catch (error) {
+      console.error('Error fetching order status:', error);
+    }
+  };
+
+  const closePopup = () => {
+    setPopupVisible(false);
+    setSelectedOrderStatus('');
+    setSelectedOrderId('');
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -116,19 +156,43 @@ const History = () => {
               {order.items.map((item, idx) => (
                 <div key={idx} className="flex justify-between">
                   <span>{item.name} (x{item.quantity})</span>
-                  <span>${item.price}</span>
+                  <span>{item.price}</span>
                 </div>
               ))}
             </div>
-            <button
-              onClick={() => handleReorder(order)}
-              className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg"
-            >
-              Reorder
-            </button>
+            <div className='flex justify-between'>
+              <button
+                onClick={() => handleReorder(order.items)}
+                className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg"
+              >
+                Reorder
+              </button>
+              <button
+                onClick={() => handleStatus(order._id)}
+                className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg"
+              >
+                Status
+              </button>
+            </div>
           </div>
         ))
       )}
+
+      {popupVisible && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            
+            <h3 className="text-gray-700 font-semibold mb-4">Status : {selectedOrderStatus}</h3>
+            <button
+              onClick={closePopup}
+              className="px-4 py-2 bg-red-500 text-white rounded-lg"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

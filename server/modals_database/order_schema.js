@@ -1,3 +1,5 @@
+//farzi hai isse hataooooo
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -12,4 +14,4 @@ const orderSchema = new Schema({
   totalAmount: { type: Number, required: true }
 });
 
-module.exports = mongoose.model('Order', orderSchema,"Orders");
+module.exports = mongoose.model('Order', orderSchema, "Orders");

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Basket from '../Components/Basket';
 import Profile from '../Components/Profile';
 import Categories from '../Components/Categories';
+import axios from 'axios';
 
 const MenuPage = () => {
   const [currentOfferIndex, setCurrentOfferIndex] = useState(0);
@@ -13,6 +14,7 @@ const MenuPage = () => {
   const isInitialMount = useRef(true);
   const [isOrderSummaryVisible, setIsOrderSummaryVisible] = useState(true);
   const [tableNo, setTableNo] = useState('');
+  //const [foodItems, setfoodItems] = useState(""); // Mocked table info
   const navigate = useNavigate();
 
   // Load order from localStorage
@@ -22,6 +24,20 @@ const MenuPage = () => {
       setOrder(JSON.parse(savedOrder));
     }
   }, []);
+
+  // useEffect(() => {
+  //   const fetchFoodItems = async () => {
+  //     try {
+  //       const response = await axios.get('http://localhost:4000/api/menu');
+  //       setfoodItems(response.data);
+  //       console.log("menu",response.data);
+  //     } catch (error) {
+  //       console.error('Error fetching menu:', error);
+  //     }
+  //   };
+
+  //   fetchFoodItems();
+  // }, []);
 
   // Save order to localStorage
   useEffect(() => {
@@ -38,7 +54,7 @@ const MenuPage = () => {
       setTableNo(storedTableNo);
     }
   }, []);
-  // Food items and offers definition
+  //Food items and offers definition
   const foodItems = {
     Burger: [
       { name: 'Cheeseburger', description: 'A delicious cheeseburger', price: '$5.99', special: 'yes' , category : "Burger"},
@@ -150,7 +166,7 @@ const MenuPage = () => {
       if (itemIndex === -1) {
         return {
           ...prevOrder,
-          [category]: [...categoryOrder, { ...item, quantity: 1 }],
+          [category]: [...categoryOrder, { ...item, quantity: 1 , tableNo}],
         };
       } else {
         const updatedItem = { ...categoryOrder[itemIndex], quantity: categoryOrder[itemIndex].quantity + 1 };
@@ -197,7 +213,7 @@ const MenuPage = () => {
       return prevOrder;
     });
   };
-
+  console.log("order", order);
   // Function to calculate discounted price
   const calculateDiscountedPrice = (item) => {
     const offer = offers.find(offer => offer.itemCategory === item.category);
@@ -222,14 +238,14 @@ const MenuPage = () => {
 
   const handleProfile=()=>{
     navigate('/history');
-  }
+  }
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-2xl bg-white rounded-lg shadow-md">
         {tableNo && (
           <p className="text-sm text-center text-gray-700 ml-8">
             Table Number: <span className="font-bold">{tableNo}</span>
-          </p>
+          </p>
         )}
       <div className="p-5 pb-20">
         <header className="text-center mb-5 flex justify-between">
@@ -365,7 +381,7 @@ const MenuPage = () => {
                             {item.special === 'yes' ? (
                               <>
                                 <span className="line-through mr-2">{item.price}</span>
-                                <span>{`${(parseFloat(item.price.slice(1)) * 0.6).toFixed(2)}`}</span>
+                                <span>{calculateDiscountedPrice(item)}</span>
                               </>
                             ) : (
                               item.price

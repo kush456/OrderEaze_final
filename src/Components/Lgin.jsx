@@ -24,7 +24,7 @@ export const Login = () => {
       console.log("error occured", error);
     }
   };
-
+  
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent default form submission
     console.log('Form data:', formData);

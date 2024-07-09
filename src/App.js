@@ -1,4 +1,4 @@
-// import { Intro } from "./Pages/Intro";
+
 import React from "react";
 import { Landing } from "./Pages/Landing.jsx";
 import Register from "./Pages/Register.jsx";
@@ -13,6 +13,9 @@ import Menu from "./Pages/Menu.jsx";
 import PaymentsPage from "./Pages/PaymentsPage.jsx";
 import FeedbackPage from "./Pages/FeedbackPage.jsx";
 import OrderTracking from "./Pages/OrderTracking.jsx";
+import AdminDashboard from "./Pages/DashboardPage.jsx";
+import AdminFeedbackPage from "./Pages/FeedbackPage.jsx";
+import { OrderDetails } from "./Pages/OrderDetailsPage.jsx";
 
 
 export default function App() {
@@ -31,14 +34,12 @@ export default function App() {
           <Route path="/payment" element={< PaymentsPage/>}></Route>
           <Route path="/feedback" element={<FeedbackPage />} />
           <Route path="/status" element={<OrderTracking/>} />
-          
+          <Route path="/dashboard" element={<AdminDashboard/>} />
+          <Route path="/adminfeedback" element={<AdminFeedbackPage/>} />
+          <Route path="/orderdetails/:orderId" element={<OrderDetails/>} />
         </Routes>
       </Router>
-      {/* <Intro/> */}
-      {/* <Login/> */}
-      {/* <MyBasket/> */}
-      {/*  */}
-      {/* <Signin /> */}
+      
     </>
   );
 }

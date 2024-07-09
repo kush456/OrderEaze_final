@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Element, scroller } from 'react-scroll';
+import axios from "axios";
 
 const Menu = () => {
   const [currentOfferIndex, setCurrentOfferIndex] = useState(0);
@@ -8,13 +9,14 @@ const Menu = () => {
   const [order, setOrder] = useState({});
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [tableInfo, setTableInfo] = useState(""); // Mocked table info
+  const [foodItems, setfoodItems] = useState(""); // Mocked table info
 
-  useEffect(() => {
-    const storedValue = localStorage.getItem('tableNo');
-    if (storedValue) {
-      setTableInfo(storedValue);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const storedValue = localStorage.getItem('tableNo');
+  //   if (storedValue) {
+  //     setTableInfo(storedValue);
+  //   }
+  // }, []);
 
 
   const categories = [
@@ -31,52 +33,19 @@ const Menu = () => {
     { name: 'IceCream', icon: '🍨' },
   ];
 
-  const foodItems = {
-    Burger: [
-      { name: 'Cheeseburger', description: 'A delicious cheeseburger', price: '$5.99' },
-      { name: 'Veggie Burger', description: 'A tasty veggie burger', price: '$4.99' },
-    ],
-    Taco: [
-      { name: 'Chicken Taco', description: 'Spicy chicken taco', price: '$3.99' },
-      { name: 'Beef Taco', description: 'Savory beef taco', price: '$4.49' },
-    ],
-    Burrito: [
-      { name: 'Bean Burrito', description: 'A hearty bean burrito', price: '$6.99' },
-      { name: 'Chicken Burrito', description: 'A flavorful chicken burrito', price: '$7.99' },
-    ],
-    Drink: [
-      { name: 'Coca Cola', description: 'Refreshing cola drink', price: '$1.99' },
-      { name: 'Orange Juice', description: 'Freshly squeezed orange juice', price: '$2.49' },
-    ],
-    Pizza: [
-      { name: 'Pepperoni Pizza', description: 'Classic pepperoni pizza', price: '$8.99' },
-      { name: 'Margherita Pizza', description: 'Traditional Margherita pizza', price: '$7.99' },
-    ],
-    Donut: [
-      { name: 'Glazed Donut', description: 'Sweet glazed donut', price: '$1.49' },
-      { name: 'Chocolate Donut', description: 'Rich chocolate donut', price: '$1.99' },
-    ],
-    Salad: [
-      { name: 'Caesar Salad', description: 'Crisp Caesar salad', price: '$5.99' },
-      { name: 'Greek Salad', description: 'Fresh Greek salad', price: '$6.49' },
-    ],
-    Noodles: [
-      { name: 'Spicy Ramen', description: 'Hot and spicy ramen noodles', price: '$7.99' },
-      { name: 'Pad Thai', description: 'Classic Thai noodle dish', price: '$8.99' },
-    ],
-    Sandwich: [
-      { name: 'Turkey Sandwich', description: 'Turkey sandwich with lettuce', price: '$5.99' },
-      { name: 'Ham Sandwich', description: 'Ham sandwich with cheese', price: '$5.49' },
-    ],
-    Pasta: [
-      { name: 'Spaghetti Bolognese', description: 'Pasta with meat sauce', price: '$9.99' },
-      { name: 'Penne Alfredo', description: 'Pasta with creamy Alfredo sauce', price: '$8.99' },
-    ],
-    IceCream: [
-      { name: 'Vanilla Ice Cream', description: 'Creamy vanilla ice cream', price: '$2.99' },
-      { name: 'Chocolate Ice Cream', description: 'Rich chocolate ice cream', price: '$2.99' },
-    ],
-  };
+  useEffect(() => {
+    const fetchFoodItems = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/menu');
+        setfoodItems(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching menu:', error);
+      }
+    };
+
+    fetchFoodItems();
+  }, []);
 
   const offers = [
     { 
