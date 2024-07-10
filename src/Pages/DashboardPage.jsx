@@ -21,7 +21,7 @@ const AdminDashboard = () => {
       try {
         const response = await axios.get('http://localhost:4000/api/placedorders');
         const data = response.data;
-
+        //console.log(data);
         // Flatten the orders from all users into a single array and add user email to each order
         const fetchedOrders = data.flatMap(user => user.orders.map(order => ({
           ...order, // Spread the order object
@@ -109,7 +109,10 @@ const AdminDashboard = () => {
     setIsDropdownOpen(!isDropdownOpen);
   }
 
-  
+  const handleFeedback = () => {
+    navigate('/dashboard/feedbacks');
+  };
+
   return (
     <div className="container mx-auto p-10">
       <div className='flex justify-center my-3'>
@@ -205,6 +208,12 @@ const AdminDashboard = () => {
         <div className="text-lg">
           <span className="font-bold">Total Payment:</span> £{totalPayment.toFixed(2)}
         </div>
+        <button
+            className="px-4 py-2 bg-blue-500 text-white rounded-md"
+            onClick={handleFeedback}
+          >
+            Feedbacks
+        </button>
         <div className="text-lg">
           <span className="font-bold">Pending Payment:</span> £{pendingPayment.toFixed(2)}
         </div>

@@ -6,6 +6,7 @@ import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [emailformail, setemailformail] = useState("");
   const [error, setError] = useState("");
   const [result, setResult] = useState("");
   const [flag, setFlag] = useState(false);
@@ -91,19 +92,27 @@ const Login = () => {
 
       const data = await response.json();
       // const { token } = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || 'Login failed');
-      }
 
-      // If login is successful, store the authToken and navigate to the desired route
-      localStorage.setItem('token', data.token);
-      
+      console.log("from backend",data);
+      if(data.message =="odin has arrived") {
+        alert("welcome admin");
+        navigate("/dashboard");
+      } else{
+        if (!response.ok) {
+          throw new Error(data.error || 'Login failed');
+        }      
 
-      // Decode token to get user information if needed
-      // const decodedToken = jwt_decode(token);
-      // console.log(decodedToken); 
-      // localStorage.setItem('token', token);
-      navigate('/table'); // 
+        // If login is successful, store the authToken and navigate to the desired route
+        localStorage.setItem('token', data.token);
+        
+        localStorage.setItem('email', email);
+        console.log(email)
+        // Decode token to get user information if needed
+        // const decodedToken = jwt_decode(token);
+        // console.log(decodedToken); 
+        // localStorage.setItem('token', token);
+        navigate('/table'); 
+      } 
     } catch (error) {
       setError(error.message);
     }

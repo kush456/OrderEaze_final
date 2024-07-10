@@ -17,24 +17,22 @@ const OrderSchema = new Schema({
 const UserSchema = new Schema({
   name: {
     type: String,
-    required: true,
     
   },
   phone: {
     type: Number,
-    required: true,
-    unique: true,
-    trim: true,
+    
+    
   },
   email: {
     type: String,
-    required: true,
-    unique: true
+    
   },
   password: {
     type: String,
-    required: true,
+    
   },
+  feedback :[String],
   orders: [OrderSchema],
   createdAt: {
     type: Date,

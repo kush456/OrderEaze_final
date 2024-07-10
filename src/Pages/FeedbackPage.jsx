@@ -1,12 +1,81 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const AdminFeedbackPage = () => {
+const FeedbackPage = () => {
+
+    const [email, setEmail] = useState('');
+    const [loading, setLoading] = useState(true);
     const [feedbacks, setFeedbacks] = useState([]);
     const navigate = useNavigate();
 
+    const [newFeedback, setNewFeedback] = useState({
+        name: '',
+        comment: '',
+    });
+   
+    useEffect(() => {
+        const fetchEmail = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('User is not logged in');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:4000/api/getUserEmail', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                setEmail(data.email);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching email:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchEmail();
+    }, []);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setNewFeedback((prevFeedback) => ({ ...prevFeedback, [name]: value }));
+        console.log("inside  inputChange",comment)
+    };
+    const comment=newFeedback.comment
+    //console.log("outside inputChange",comment)
+    const handleSubmit = (e) => {
+        console.log("comment that is being sent to backend",comment)
+        e.preventDefault();
+        setFeedbacks((prevFeedbacks) => [...prevFeedbacks, newFeedback]);
+        setNewFeedback({ name: '', comment: '' });
+        fetch('http://localhost:4000/api/feedback', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email,comment })
+          })
+          .then(response => response.json())
+          .then(data => {
+            alert(data);
+          })
+          .catch(error => {
+            console.error('There was an error submitting the feedback!', error);
+          });
+        };
+  
     const goToMenu = () => {
-        navigate('/dashboard');
+        navigate('/menu');
       };
 
     return (
@@ -38,12 +107,34 @@ const AdminFeedbackPage = () => {
                     </div>
                 </div>
             ) : (
-                <p className="text-gray-700 mb-8">No feedback yet.</p>
+                <p className="text-gray-700 mb-8">No feedback yet. Be the first to leave a comment!</p>
             )}
 
-            
+            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md w-full max-w-md text-center">
+                <h2 className="text-xl font-bold mb-4">Add Your Feedback</h2>
+                <input
+                    type="text"
+                    name="name"
+                    value={email}
+                    onChange={handleInputChange}
+                    placeholder="Your Name"
+                    className="w-full p-2 mb-4 border rounded-lg"
+                    required
+                />
+                <textarea
+                    name="comment"
+                    value={newFeedback.comment}
+                    onChange={handleInputChange}
+                    placeholder="Your Comment"
+                    className="w-full p-2 mb-4 border rounded-lg"
+                    required
+                />
+                <button type="submit" className="bg-red-400 text-white px-6 py-2 rounded-lg font-semibold">
+                    Submit
+                </button>
+            </form>
         </div>
     );
 };
 
-export default AdminFeedbackPage;
+export default FeedbackPage;
