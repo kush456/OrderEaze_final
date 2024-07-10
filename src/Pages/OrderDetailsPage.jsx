@@ -38,7 +38,7 @@ export const OrderDetails = () => {
   };
 
   const handleStatusChange = async (newStatus) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('admin');
     if (!token) {
       console.error('User is not logged in');
       return;

@@ -10,6 +10,8 @@ export const MyBasket = () => {
   const selectedPayment = location.state?.selectedPayment || [];
   const selectedCard = location.state?.selectedCard || [];
   const [orderPlaced, setOrderPlaced] = useState(false); // State to track if order is placed
+  const emailAdress=localStorage.getItem('email');
+  console.log("email adress saved from login",emailAdress)
 
   useEffect(() => {
     // Calculate discounted prices for all items in the order
@@ -57,6 +59,7 @@ export const MyBasket = () => {
         userId: userId,
         items: items,
         orderDate: new Date().toISOString(),
+        emailAdress: emailAdress,
         totalAmount: totalAmount,
         status: 'active'
       };

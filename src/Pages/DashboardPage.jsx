@@ -21,7 +21,7 @@ const AdminDashboard = () => {
       try {
         const response = await axios.get('http://localhost:4000/api/placedorders');
         const data = response.data;
-        //console.log(data);
+        console.log(data);
         // Flatten the orders from all users into a single array and add user email to each order
         const fetchedOrders = data.flatMap(user => user.orders.map(order => ({
           ...order, // Spread the order object

@@ -94,7 +94,9 @@ const Login = () => {
       // const { token } = await response.json();
 
       console.log("from backend",data);
-      if(data.message =="odin has arrived") {
+      if(data.admin ) {
+        console.log("token" ,data.admin);
+        localStorage.setItem('admin', data.admin);
         alert("welcome admin");
         navigate("/dashboard");
       } else{

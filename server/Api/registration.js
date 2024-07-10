@@ -67,7 +67,10 @@ router.post('/login', async (req, res) => {
   try {
     if (email == "aman_y@bt.iitr.ac.in" && password == 123456){
       console.log("inside odin house");
-      res.status(200).json({ message:"odin has arrived" });
+      const user = await FoodItem.User.findOne({ email });
+      const token = jwt.sign({ userId: user._id }, jwtsecret, { expiresIn: '1h' });
+      //res.status(200).json({ message:"odin has arrived" });
+      res.json({ admin : token });
     } else {
       const user = await FoodItem.User.findOne({ email });
     
@@ -221,12 +224,13 @@ router.get('/placedorders/:orderId', async (req, res) => {
 });
 
 // Route to update the status of an order
-router.patch('/placedorders/:orderId/status',  async (req, res) => {
+router.patch('/placedorders/:orderId/status', verifyToken, async (req, res) => {
+  console.log("patch req body", req.body);
   const { orderId } = req.params;
   const { status } = req.body;
   console.log(req.body);
   try {
-    const user = await FoodItem.User.findById(req.userId);
+    const user = await FoodItem.User.findOne({ 'orders._id': orderId });
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
