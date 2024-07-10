@@ -1,3 +1,7 @@
+# Scan this QR-CODE to access the web-app
+
+![OrderEaze](https://github.com/kush456/OrderEaze_final/assets/126865370/43ffee43-d937-482b-ae9b-4bc1c179c9a1)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
