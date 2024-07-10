@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 //import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import { BASE_URL } from './local';
 
 
 export const OrderDetails = () => {
@@ -20,7 +21,7 @@ export const OrderDetails = () => {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/api/placedorders/${orderId}`);
+        const response = await axios.get(BASE_URL + `api/placedorders/${orderId}`);
         const data = response.data;
         setOrder(data);
         console.log("data set ", data);
@@ -47,7 +48,7 @@ export const OrderDetails = () => {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.userId;
 
-      await axios.patch(`http://localhost:4000/api/placedorders/${orderId}/status`,
+      await axios.patch(BASE_URL + `api/placedorders/${orderId}/status`,
          { status: newStatus },
          { headers: { 'Authorization': `Bearer ${token}` } }
         );

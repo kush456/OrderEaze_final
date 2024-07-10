@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import { BASE_URL } from './local';
 
 export const MyBasket = () => {
   const location = useLocation();
@@ -64,7 +65,7 @@ export const MyBasket = () => {
         status: 'active'
       };
       console.log('Order data being sent:', orderData); //logging to check
-      const response = await fetch('http://localhost:4000/api/order', {
+      const response = await fetch(BASE_URL + 'api/order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

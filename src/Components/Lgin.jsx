@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BASE_URL } from '../Pages/local';
 
 export const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -11,7 +12,7 @@ export const Login = () => {
   const sendata = async (formData) => {
     console.log("sendata called");
     try {
-      const response = await fetch('http://localhost:4000/api/register', {
+      const response = await fetch(BASE_URL + 'api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

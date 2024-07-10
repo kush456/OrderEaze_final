@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from './local';
 
 const FeedbackPage = () => {
 
@@ -22,7 +23,7 @@ const FeedbackPage = () => {
             }
 
             try {
-                const response = await fetch('http://localhost:4000/api/getUserEmail', {
+                const response = await fetch(BASE_URL + 'api/getUserEmail', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -58,7 +59,7 @@ const FeedbackPage = () => {
         e.preventDefault();
         setFeedbacks((prevFeedbacks) => [...prevFeedbacks, newFeedback]);
         setNewFeedback({ name: '', comment: '' });
-        fetch('http://localhost:4000/api/feedback', {
+        fetch(BASE_URL + 'api/feedback', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

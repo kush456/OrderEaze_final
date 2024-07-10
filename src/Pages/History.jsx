@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {jwtDecode} from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from './local';
 
 const History = () => {
   const [orders, setOrders] = useState([]);
@@ -22,7 +23,7 @@ const History = () => {
       const userId = decodedToken.userId;
 
       try {
-        const response = await fetch('http://localhost:4000/api/orderhist', {
+        const response = await fetch(BASE_URL+ 'api/orderhist', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -66,7 +67,7 @@ const History = () => {
         totalAmount: totalAmount,
       };
 
-      fetch('http://localhost:4000/api/order', {
+      fetch(BASE_URL+ 'api/order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -106,7 +107,7 @@ const History = () => {
       const decodedToken = jwtDecode(token);
       
 
-      const response = await fetch(`http://localhost:4000/api/placedorders/${orderId}`, {
+      const response = await fetch(BASE_URL + `api/placedorders/${orderId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

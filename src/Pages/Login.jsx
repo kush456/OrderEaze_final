@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { auth } from '../Firebase'; // Import auth from firebase.js
 import { Toaster, toast } from 'react-hot-toast';
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { BASE_URL } from './local';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -82,7 +83,7 @@ const Login = () => {
     e.preventDefault();
     console.log("handleemail called");
     try {
-      const response = await fetch('http://localhost:4000/api/login', {
+      const response = await fetch(BASE_URL + 'api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

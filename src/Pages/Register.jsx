@@ -2,6 +2,7 @@ import React, { useState ,} from 'react';
 import 'tailwindcss/tailwind.css';
 import { useNavigate } from 'react-router-dom';
 import { FaGoogle, FaApple, FaFacebook } from 'react-icons/fa';
+import { BASE_URL } from './local';
 
 
 const Register = () => {
@@ -22,7 +23,7 @@ const Register = () => {
   const sendata = async (userData) => {
     console.log("sendata called");
     try {
-      const response = await fetch('http://localhost:4000/api/register', {
+      const response = await fetch(BASE_URL + 'api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

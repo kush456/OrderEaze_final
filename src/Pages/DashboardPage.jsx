@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from './local';
 
 const AdminDashboard = () => {
   const [orders, setOrders] = useState([]);
@@ -19,7 +20,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/api/placedorders');
+        const response = await axios.get(BASE_URL+ 'api/placedorders');
         const data = response.data;
         console.log(data);
         // Flatten the orders from all users into a single array and add user email to each order

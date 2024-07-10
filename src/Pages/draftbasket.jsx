@@ -25,7 +25,7 @@ console.log("ye order jo menu se aya h",order);
       };
       console.log("orderdata name in mybasket",orderData.items);
   
-      const response = await fetch('http://localhost:4000/api/order', {
+      const response = await fetch(BASE_URL+ 'api/order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -109,6 +109,7 @@ import { useNavigate } from 'react-router-dom';
 import Basket from '../Components/Basket';
 import Profile from '../Components/Profile';
 import Categories from '../Components/Categories';
+import { BASE_URL } from './local';
 
 
 const MenuPage = () => {
